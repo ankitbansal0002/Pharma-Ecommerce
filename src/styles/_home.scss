@@ -37,7 +37,7 @@
   
   .product-card {
     width: 18.75rem;
-    height: 25rem;
+    height: 24rem;
     padding: 1rem;
     flex: none;
     @include flex(column, flex-start, center, 4px);
@@ -45,7 +45,7 @@
     background-color: white;
   
     &:hover > div {
-      opacity: 1;
+      opacity: 0.8;
     }
   
     img {
