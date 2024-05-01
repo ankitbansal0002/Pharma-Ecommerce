@@ -8,6 +8,7 @@ import Header from "./components/header";
 const Home =  lazy(() => import("./pages/home"));
 const Cart =  lazy(() => import("./pages/cart"));
 const Search =  lazy(() => import("./pages/search"));
+const Shipping =  lazy(() => import("./pages/shipping"));
 
 
 //Admin
@@ -41,7 +42,7 @@ const App = () => {
           <Route path="/" element = {<Home />}/>
           <Route path="/search" element = {<Search />}/>
           <Route path="/cart" element = {<Cart />}/>
-
+          <Route path="/shipping" element = {<Shipping />}/>
           // Rotues
 
           <Route
