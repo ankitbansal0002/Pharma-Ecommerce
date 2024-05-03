@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 
 
-const user = {_id: "", role: ""};
+const user = {_id: "temp", role: "admin"};
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
