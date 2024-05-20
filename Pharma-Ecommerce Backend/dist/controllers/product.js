@@ -2,7 +2,66 @@ import { TryCatch } from "../middlewares/error.js";
 import { Product } from "../models/product.js";
 import ErrorHandler from "../utils/utility-class.js";
 import { rm } from "fs";
-import { faker } from "@faker-js/faker";
+import { myCache } from "../app.js";
+export const getlatestProducts = TryCatch(async (req, res, next) => {
+    let products;
+    if (myCache.has("latest-product")) {
+        products = JSON.parse(myCache.get("latest-product"));
+    }
+    else {
+        products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
+        myCache.set("latest-product", JSON.stringify(products));
+    }
+    return res.status(200).json({
+        success: true,
+        products,
+    });
+});
+// Revalidate on New,Update,Delete Product & on New Order
+export const getAllCategories = TryCatch(async (req, res, next) => {
+    let categories;
+    if (myCache.has("get-all-categories")) {
+        categories = JSON.parse(myCache.get("get-all-categories"));
+    }
+    else {
+        categories = await Product.distinct("category");
+        myCache.set("get-all-categories", JSON.stringify(categories));
+    }
+    return res.status(200).json({
+        success: true,
+        categories,
+    });
+});
+export const getAdminProducts = TryCatch(async (req, res, next) => {
+    let products;
+    if (myCache.has("get-Admin-Products")) {
+        products = JSON.parse(myCache.get("get-Admin-Products"));
+    }
+    else {
+        products = await Product.find({});
+        myCache.set("get-Admin-Products", JSON.stringify(products));
+    }
+    return res.status(200).json({
+        success: true,
+        products,
+    });
+});
+export const getSingleProduct = TryCatch(async (req, res, next) => {
+    let product;
+    if (myCache.has("get-Single-Product")) {
+        product = JSON.parse(myCache.get("get-Single-Product"));
+    }
+    else {
+        product = await Product.findById(req.params.id);
+        myCache.set("get-Single-Product", JSON.stringify(product));
+    }
+    if (!product)
+        return next(new ErrorHandler("Product Not Found", 404));
+    return res.status(200).json({
+        success: true,
+        product,
+    });
+});
 export const newProduct = TryCatch(async (req, res, next) => {
     const { name, price, stock, category } = req.body;
     const photo = req.file;
@@ -24,37 +83,6 @@ export const newProduct = TryCatch(async (req, res, next) => {
     return res.status(201).json({
         success: true,
         message: "Product Created Successfully",
-    });
-});
-export const getlatestProducts = TryCatch(async (req, res, next) => {
-    const products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
-    return res.status(200).json({
-        success: true,
-        products,
-    });
-});
-// Revalidate on New,Update,Delete Product & on New Order
-export const getAllCategories = TryCatch(async (req, res, next) => {
-    const categories = await Product.distinct("category");
-    return res.status(200).json({
-        success: true,
-        categories,
-    });
-});
-export const getAdminProducts = TryCatch(async (req, res, next) => {
-    const products = await Product.find({});
-    return res.status(200).json({
-        success: true,
-        products,
-    });
-});
-export const getSingleProduct = TryCatch(async (req, res, next) => {
-    const product = await Product.findById(req.params.id);
-    if (!product)
-        return next(new ErrorHandler("Product Not Found", 404));
-    return res.status(200).json({
-        success: true,
-        product,
     });
 });
 export const updateProduct = TryCatch(async (req, res, next) => {
@@ -132,22 +160,22 @@ export const getAllProducts = TryCatch(async (req, res, next) => {
         totalPage,
     });
 });
-const generateRandomProducts = async (count = 10) => {
-    const products = [];
-    for (let i = 0; i < count; i++) {
-        const product = {
-            name: faker.commerce.productName(),
-            photo: "uploads/d26965a4-b4ad-4d94-85f0-3dc992b63174.jpg",
-            price: faker.commerce.price({ min: 1500, max: 80000, dec: 0 }),
-            stock: faker.commerce.price({ min: 0, max: 100, dec: 0 }),
-            category: faker.commerce.department(),
-            createdAt: new Date(faker.date.past()),
-            updatedAt: new Date(faker.date.recent()),
-            __v: 0,
-        };
-        products.push(product);
-    }
-    await Product.create(products);
-    console.log({ succecss: true });
-};
-generateRandomProducts(40);
+//   const generateRandomProducts = async (count: number = 10) => {
+//   const products = [];
+//   for (let i = 0; i < count; i++) {
+//     const product = {
+//       name: faker.commerce.productName(),
+//       photo: "uploads/d26965a4-b4ad-4d94-85f0-3dc992b63174.jpg",
+//       price: faker.commerce.price({ min: 1500, max: 80000, dec: 0 }),
+//       stock: faker.commerce.price({ min: 0, max: 100, dec: 0 }),
+//       category: faker.commerce.department(),
+//       createdAt: new Date(faker.date.past()),
+//       updatedAt: new Date(faker.date.recent()),
+//       __v: 0,
+//     };
+//     products.push(product);
+//   }
+//   await Product.create(products);
+//   console.log({ succecss: true });
+// };
+// generateRandomProducts(40);
