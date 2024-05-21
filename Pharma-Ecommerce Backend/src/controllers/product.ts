@@ -7,6 +7,7 @@ import ErrorHandler from "../utils/utility-class.js";
 import { rm } from "fs";
 import {faker} from "@faker-js/faker";
 import { myCache } from "../app.js";
+import { invalidateCache } from "../utils/features.js";
   
   export const getlatestProducts = TryCatch(async (req, res, next) => {
 
@@ -105,7 +106,8 @@ import { myCache } from "../app.js";
         photo: photo.path,
       });
   
-  
+      invalidateCache({ product: true, admin: true });
+
       return res.status(201).json({
         success: true,
         message: "Product Created Successfully",
@@ -135,6 +137,12 @@ import { myCache } from "../app.js";
         if(category) product.category = category;
         
       await product.save();
+
+      invalidateCache({
+        product: true,
+        productId: String(product._id),
+        admin: true,
+      });
   
       return res.status(201).json({
         success: true,
@@ -157,6 +165,12 @@ import { myCache } from "../app.js";
         });
 
       await product.deleteOne();
+
+      invalidateCache({
+        product: true,
+        productId: String(product._id),
+        admin: true,
+      });
   
       return res.status(201).json({
         success: true,
