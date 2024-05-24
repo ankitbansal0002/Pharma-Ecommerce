@@ -4,9 +4,18 @@ import { connectDB } from "./utils/features.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import productRoute from "./routes/products.js";
 import NodeCache from "node-cache";
-const port = 3000;
+import { config } from "dotenv";
+import morgan from "morgan";
+// import 
+config({
+    path: "./.env",
+});
+const port = process.env.PORT || 3000;
+const mongoURI = process.env.MONGO_URI || "";
 const app = express();
-connectDB();
+app.use(morgan("dev"));
+;
+connectDB(mongoURI);
 app.use(express.json());
 export const myCache = new NodeCache();
 app.get("/", (req, res) => {
