@@ -3,6 +3,7 @@ import userRoute from "./routes/user.js";
 import { connectDB } from "./utils/features.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import productRoute from "./routes/products.js";
+import OrderRoute from "./routes/order.js";
 import NodeCache from "node-cache";
 import { config } from "dotenv";
 import morgan from "morgan";
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 // Using Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
+app.use("/api/v1/order", OrderRoute);
 app.use("/uploads", express.static("uploads"));
 app.use(errorMiddleware);
 app.listen(port, () => {
