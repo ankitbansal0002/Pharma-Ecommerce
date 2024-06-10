@@ -5,6 +5,7 @@ import { errorMiddleware } from "./middlewares/error.js";
 import productRoute from "./routes/products.js";
 import OrderRoute from "./routes/order.js";
 import paymentRoute from "./routes/payment.js";
+import dashboardRoute from "./routes/stats.js";
 import NodeCache from "node-cache";
 import { config } from "dotenv";
 import morgan from "morgan";
@@ -28,6 +29,7 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
 app.use("/api/v1/order", OrderRoute);
 app.use("/api/v1/payment", paymentRoute);
+app.use("/api/v1/dashboard", dashboardRoute);
 app.use("/uploads", express.static("uploads"));
 app.use(errorMiddleware);
 app.listen(port, () => {
