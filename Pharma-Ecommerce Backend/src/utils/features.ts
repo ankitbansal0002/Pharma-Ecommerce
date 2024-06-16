@@ -1,16 +1,15 @@
-import mongoose from "mongoose";
-import { myCache} from "../app.js";
-import { InvalidateCacheProps } from "../types/types.js";
+import mongoose, { Document } from "mongoose";
+import { myCache } from "../app.js";
 import { Product } from "../models/product.js";
-import {OrderItemType} from "../types/types.js"
+import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
 
-export const connectDB = (uri : string) => {
-    mongoose
-      .connect(uri, {
-        dbName: "Pharma_Ecommerce",
-      })
-      .then((c) => console.log(`DB Connected to ${c.connection.host}`))
-      .catch((e) => console.log(e));
+export const connectDB = (uri: string) => {
+  mongoose
+    .connect(uri, {
+      dbName: "Ecommerce_24",
+    })
+    .then((c) => console.log(`DB Connected to ${c.connection.host}`))
+    .catch((e) => console.log(e));
 };
 
 export const invalidateCache = ({
@@ -23,9 +22,9 @@ export const invalidateCache = ({
 }: InvalidateCacheProps) => {
   if (product) {
     const productKeys: string[] = [
-      "latest-product",
-      "get-all-categories",
-      "get-Admin-Products",
+      "latest-products",
+      "categories",
+      "all-products",
     ];
 
     if (typeof productId === "string") productKeys.push(`product-${productId}`);
@@ -70,19 +69,6 @@ export const calculatePercentage = (thisMonth: number, lastMonth: number) => {
   return Number(percent.toFixed(0));
 };
 
-
-interface MyDocument extends Document {
-  createdAt: Date;
-  discount?: number;
-  total?: number;
-}
-type FuncProps = {
-  length: number;
-  docArr: MyDocument[];
-  today: Date;
-  property?: "discount" | "total";
-};
-
 export const getInventories = async ({
   categories,
   productsCount,
@@ -107,6 +93,17 @@ export const getInventories = async ({
   return categoryCount;
 };
 
+interface MyDocument extends Document {
+  createdAt: Date;
+  discount?: number;
+  total?: number;
+}
+type FuncProps = {
+  length: number;
+  docArr: MyDocument[];
+  today: Date;
+  property?: "discount" | "total";
+};
 
 export const getChartData = ({
   length,
@@ -128,5 +125,6 @@ export const getChartData = ({
       }
     }
   });
+
   return data;
 };

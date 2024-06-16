@@ -354,15 +354,15 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
       twelveMonthOrdersPromise,
     ]);
 
-    // const productCounts = getChartData({ length: 6, today, docArr: products });
-    // const usersCounts = getChartData({ length: 6, today, docArr: users });
-    // const ordersCounts = getChartData({ length: 12, today, docArr: orders });
+    const productCounts = getChartData({ length: 6, today, docArr: products });
+    const usersCounts = getChartData({ length: 6, today, docArr: users });
+    const ordersCounts = getChartData({ length: 12, today, docArr: orders });
 
-    // charts = {
-    //   users: usersCounts,
-    //   products: productCounts,
-    //   orders: ordersCounts,
-    // };
+    charts = {
+      users: usersCounts,
+      products: productCounts,
+      orders: ordersCounts,
+    };
 
     myCache.set(key, JSON.stringify(charts));
   }
@@ -397,27 +397,22 @@ export const getLineCharts = TryCatch(async (req, res, next) => {
       Order.find(baseQuery).select(["createdAt", "discount", "total"]),
     ]);
 
-    // const productCounts = getChartData({ length: 12, today, docArr: products });
-    // const usersCounts = getChartData({ length: 12, today, docArr: users });
-    // const discount = getChartData({
-    //   length: 12,
-    //   today,
-    //   docArr: orders,
-    //   property: "discount",
-    // });
-    // const revenue = getChartData({
-    //   length: 12,
-    //   today,
-    //   docArr: orders,
-    //   property: "total",
-    // });
+    const productCounts = getChartData({ length: 12, today, docArr: products });
+    const usersCounts = getChartData({ length: 12, today, docArr: users });
+    const discount = getChartData({
+      length: 12,
+      today,
+      docArr: orders,
+      property: "discount",
+    });
+    const revenue = getChartData({
+      length: 12,
+      today,
+      docArr: orders,
+      property: "total",
+    });
 
-    // charts = {
-    //   users: usersCounts,
-    //   products: productCounts,
-    //   discount,
-    //   revenue,
-    // };
+     
 
     myCache.set(key, JSON.stringify(charts));
   }

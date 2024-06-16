@@ -4,7 +4,7 @@ import { Product } from "../models/product.js";
 export const connectDB = (uri) => {
     mongoose
         .connect(uri, {
-        dbName: "Pharma_Ecommerce",
+        dbName: "Ecommerce_24",
     })
         .then((c) => console.log(`DB Connected to ${c.connection.host}`))
         .catch((e) => console.log(e));
@@ -12,9 +12,9 @@ export const connectDB = (uri) => {
 export const invalidateCache = ({ product, order, admin, userId, orderId, productId, }) => {
     if (product) {
         const productKeys = [
-            "latest-product",
-            "get-all-categories",
-            "get-Admin-Products",
+            "latest-products",
+            "categories",
+            "all-products",
         ];
         if (typeof productId === "string")
             productKeys.push(`product-${productId}`);
